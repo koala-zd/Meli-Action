@@ -75,15 +75,15 @@ jobs:
                 -H "Accept: application/vnd.github+json" \
                 "https://api.github.com/repos/${REPO}/contents/downloads/${NAME}" \
                 -d "{\"message\":\"پاک‌سازی پیش از دانلود\",\"sha\":\"${SHA}\",\"branch\":\"${BRANCH}\"}" > /dev/null \
-                && echo "🗑️ ${NAME} حذف شد"
+                && echo "🗑️ ${NAME} حذف شد" || true
             ) &
             ((batch++))
             if [ $batch -ge 10 ]; then
-              wait
+              wait || true
               batch=0
             fi
           done < <(echo "$FILES" | jq -r '.[] | "\(.name)|\(.sha)"')
-          wait  # برای باقی‌مانده‌ها (کمتر از ۱۰)
+          wait || true  # برای باقی‌مانده‌ها
           echo "✅ همهٔ فایل‌های قبلی از سرور حذف شدند."
 
       # ──────────────────────────────────────
